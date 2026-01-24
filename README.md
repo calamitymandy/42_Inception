@@ -1,6 +1,6 @@
 # 42_Inception
 
-*This project has been created as part of the 42 curriculum by <amdemuyn>.*
+*This project has been created as part of the 42 curriculum by amdemuyn.*
 
 # Inception
 

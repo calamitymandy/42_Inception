@@ -73,7 +73,7 @@ To remove containers, volumes, and network:
 
 ## Design Choices and Comparisons
 
-**Virtual Machines vs Docker**
+### **Virtual Machines vs Docker**
 
 Virtual Machines emulate full operating systems and consume more resources.
 
@@ -82,7 +82,7 @@ Docker containers share the host kernel, start faster, and are more lightweight.
 Docker allows fine-grained service isolation while keeping performance high.
 
 
-**Secrets vs Environment Variables**
+### **Secrets vs Environment Variables**
 
 Environment variables are used for non-sensitive configuration values.
 
@@ -91,7 +91,7 @@ Docker secrets are used for passwords and credentials.
 This separation prevents sensitive data from being exposed in images or repositories.
 
 
-**Docker Network vs Host Network**
+### **Docker Network vs Host Network**
 
 Docker networks provide isolated, internal communication between containers.
 
@@ -100,7 +100,7 @@ Host networking removes isolation and is less secure.
 A dedicated Docker network ensures controlled service exposure.
 
 
-**Docker Volumes vs Bind Mounts**
+### **Docker Volumes vs Bind Mounts**
 
 Docker volumes are managed by Docker and portable across systems.
 

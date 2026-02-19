@@ -24,16 +24,13 @@ Provided services:
 
 From the project root directory:
 
-```
-make
+```make```
 
 ### Stop the Infrastructure
-```
-make down
+```make down```
 
 ### Accessing the Website
-```
-Website
+```Website```
 
 Open a browser and go to:
 

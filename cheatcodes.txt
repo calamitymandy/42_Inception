@@ -1,0 +1,12 @@
+run docker: 
+open -a Docker
+
+run all: 
+        - make
+            o
+        - cd srcs
+        - docker compose up --build -d
+
+clean docker volumes:
+docker compose -f srcs/docker-compose.yml down
+docker volume prune -f

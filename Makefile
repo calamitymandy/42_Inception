@@ -6,7 +6,7 @@
 #    By: amdemuyn <amdemuyn@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/09 18:19:56 by amdemuyn          #+#    #+#              #
-#    Updated: 2026/03/09 20:38:29 by amdemuyn         ###   ########.fr        #
+#    Updated: 2026/03/09 21:22:58 by amdemuyn         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,9 +30,9 @@ make_env:
 	@echo "$(GREEN) Let's create the .env file! $(RESET)"
 	@if [ ! -f $(ENV_FILE) ]; then \
 		cp srcs/.env.example $(ENV_FILE); \
-		echo "$(GREEN) .env created. YAY! $(RESET)"
+		echo "$(GREEN) .env created. YAY! $(RESET)"; \
 	else \
-		echo "$(RED) .env is already there... $(RESET)"
+		echo "$(RED) .env is already there... $(RESET)"; \
 	fi
 
 # Load environment variables
@@ -41,4 +41,17 @@ ifneq ("$(wildcard $(ENV_FILE))","")
 	include $(ENV_FILE)
 	export $(shell sed 's/=.*//' $(ENV_FILE))
 endif
+
+# Checks if domain amdemuyn.42.fr exists in /etc/hosts.
+# If not, it adds it using sudo tee -a.
+# Ensures your local machine can resolve amdemuyn.42.fr to 127.0.0.1 for testing.
+
+hosts:
+	@echo "$(GREEN) Check hosts for amdemuyn.42.fr $(RESET)"
+	@if ! grep -q 'amdemuyn.42.fr' /etc/hosts; then \
+		echo "$(GREEN) ADD amdemuyn.42.fr to /etc/hosts $(RESET)" \
+		echo "127.0.0.1 amdemuyn.42.fr www.amdemuyn.42.fr" | sudo tee -a /etc/hosts; \
+	else \
+		echo "$(BLUE) amdemuyn.42.fr ALREADY IN /etc/hosts $(RESET)"; \
+	fi
 

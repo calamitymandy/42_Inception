@@ -6,7 +6,7 @@
 #    By: amdemuyn <amdemuyn@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/09 18:19:56 by amdemuyn          #+#    #+#              #
-#    Updated: 2026/03/10 19:02:18 by amdemuyn         ###   ########.fr        #
+#    Updated: 2026/03/10 19:17:44 by amdemuyn         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -98,5 +98,12 @@ re: fclean all
 ps:
 	@docker compose -f $(DOCKER_CMP) ps
 
-
-
+# Opens an interactive MySQL shell inside the MariaDB container.
+exec_mariadb:
+	@echo "$(GREEN)Accessing MariaDB database...$(RESET)"
+	@echo "To list all databases: $(GREEN)<show databases;>$(RESET)"
+	@echo "To list tables in a database: $(GREEN)<use database_name; show tables;>$(RESET)"
+	@echo "To show content of a table: $(GREEN)<use database_name; select * from table_name;>$(RESET)"
+	@echo "To see the structure of a table: $(GREEN)<use database_name; describe table_name;>$(RESET)"
+	@echo "$(GREEN)To exit: <exit;>$(RESET)"
+	@docker exec -it mariadb mysql -u $(DB_USER) -p $(DB_ROOT)

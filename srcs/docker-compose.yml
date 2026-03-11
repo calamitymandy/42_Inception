@@ -1,0 +1,69 @@
+# docker-network that establishes the connection between the containers
+networks:
+  inception_network:                          # Name of the network
+    driver: bridge                            # The network is a bridge network (a network that connects the containers on the same host)
+
+# Services define the containers that will be created and run
+services:
+  nginx:                                      # nginx is a web server used for the wordpress app
+    platform: linux/amd64
+    container_name: nginx
+    build: ./requirements/nginx               # Build the nginx image using the Dockerfile in the nginx directory
+    ports:                                    # ports -> expose to the external network
+      - "443:443"                             # Map port 443 of the host to port 443 of the container (https)
+    volumes:
+      - wordpress:/var/www/html/wordpress     # Mount the srcs directory from the host to the container (where WordPress files will be)
+    depends_on:
+      - wordpress                             # Ensure that the nginx container starts after the wordpress container
+    networks:
+      - inception_network                     # Connect this service to the inception_network
+    restart:  always
+
+  # mariadb is a database server used for the wordpress app
+  mariadb:                                    
+    platform: linux/amd64
+    container_name: mariadb
+    build: ./requirements/mariadb             # Build the mariadb image using the Dockerfile in the mariadb directory
+    env_file: 
+      - .env                                  # Load environment variables from the .env file (for database configuration) 
+    volumes:
+      - mariadb:/var/lib/mysql                # Mount the mariadb directory from the host to the container (where database files will be stored)
+    networks:
+      - inception_network                     # Connect this service to the inception_network
+    expose:
+      - "3306"                                # Expose port 3306 for internal communication (not mapped to host)
+    restart:  always
+
+  # wordpress is the application that will run on the nginx web server and use the mariadb database
+  wordpress:
+    platform: linux/amd64
+    container_name: wordpress
+    build: ./requirements/wordpress           # Build the wordpress image using the Dockerfile in the wordpress directory
+    env_file: 
+      - .env                                  # Load environment variables from the .env file (for WordPress configuration)
+    volumes:
+      - wordpress:/var/www/html/wordpress     # Mount the srcs directory from the host to the container (where WordPress files will be)
+    depends_on:
+      - mariadb                               # Ensure that the wordpress container starts after the mariadb container
+    networks:
+      - inception_network                     # Connect this service to the inception_network
+    expose:
+      - "9000"                                # Expose port 9000 for internal communication (not mapped to host)
+    restart:  always
+
+# Volumes define the persistent storage for the containers
+volumes:
+  mariadb:                                    # Volume for mariadb data (database files)
+    driver: local                             # Use the local driver for this volume
+    driver_opts:                              # Optional driver options for the volume
+      type: none                              # Use the "none" type to specify a custom mount point
+      device: /Users/amandine/data/mariadb    # MAC ### Actual path on your host machine where you want to store mariadb data ###
+      #device: /home/${USER}/data/mariadb     # LINUX     
+      o: bind                                 # Use bind mount to link the host directory to the container
+  wordpress:                                  # Volume for wordpress data (WordPress files)
+    driver: local                             # Use the local driver for this volume
+    driver_opts:                              # Optional driver options for the volume
+      type: none                              # Use the "none" type to specify a custom mount point
+      device: /Users/amandine/data/wordpress  # MAC ### Actual path on your host machine where you want to store wordpress data ###
+      #device: /home/${USER}/data/wordpress   # LINUX     
+      o: bind                                 # Use bind mount to link the host directory to the container

@@ -9,15 +9,15 @@ RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y nginx openssl
 
 # Copy configuration file of nginx
-COPY ./conf/default.conf /etc/nginx/sites-enabled/default
+COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default
 
 # launch script to start service
 RUN printf '#!/bin/bash\n\
-if [ ! -f /etc/ssl/certs/nginx.crt ]; then\n\
+if [ ! -f /etc/ssl/certs/my_nginx.crt ]; then\n\
 echo "Nginx: Initializing SSL certificate..."\n\
 openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
--keyout /etc/ssl/private/nginx.key \
--out /etc/ssl/certs/nginx.crt \
+-keyout /etc/ssl/private/my_nginx.key \
+-out /etc/ssl/certs/my_nginx.crt \
 -subj "/C=ES/ST=Madrid/L=Madrid/O=wordpress/CN=amdemuyn.42.fr"\n\
 echo "Nginx: SSL certificate created!"\n\
 fi\n\

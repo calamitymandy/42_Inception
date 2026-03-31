@@ -12,18 +12,17 @@ RUN apt-get install -y nginx openssl
 COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default
 
 # launch script to start service
-RUN printf '#!/bin/bash\n\
+RUN printf '#!/bin/sh\n\
 if [ ! -f /etc/ssl/certs/my_nginx.crt ]; then\n\
-echo "Nginx: Initializing SSL certificate..."\n\
-openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
--keyout /etc/ssl/private/my_nginx.key \
--out /etc/ssl/certs/my_nginx.crt \
--subj "/C=ES/ST=Madrid/L=Madrid/O=wordpress/CN=amdemuyn.42.fr"\n\
-echo "Nginx: SSL certificate created!"\n\
+    echo "Nginx: Initializing SSL certificate..."\n\
+    openssl req -x509 -nodes -days 365 -newkey rsa:4096 \\\n\
+        -keyout /etc/ssl/private/my_nginx.key \\\n\
+        -out /etc/ssl/certs/my_nginx.crt \\\n\
+        -subj "/C=ES/ST=Madrid/L=Madrid/O=wordpress/CN=amdemuyn.42.fr"\n\
+    echo "Nginx: SSL certificate created!"\n\
 fi\n\
 echo "Nginx: Server started!"\n\
-nginx -g \"daemon off;\"\n' \
-> /start.sh
+exec nginx -g \"daemon off;\"\n' > /start.sh
 
 # Give execution rights to the script
 RUN chmod +x /start.sh

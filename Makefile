@@ -6,7 +6,7 @@
 #    By: amdemuyn <amdemuyn@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/09 18:19:56 by amdemuyn          #+#    #+#              #
-#    Updated: 2026/03/10 19:17:44 by amdemuyn         ###   ########.fr        #
+#    Updated: 2026/03/31 20:17:11 by amdemuyn         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -117,17 +117,19 @@ test_persistence: down
 	@docker system prune -a --force
 	@$(MAKE) up
 	@echo "$(ORANGE)Waiting until MariaDB has restarted...$(RESET)"
-	@while [ -z "$$(docker ps -q -f name=mariadb)" ]; do \
-		sleep 1; \
+	@echo "$(ORANGE)Waiting for MariaDB to be READY...$(RESET)"
+	@until docker exec mariadb mysqladmin ping -u root -p$(DB_ROOT_PASS) --silent; do \
+		sleep 2; \
 	done
-	@$(MAKE) check_data
+	@$(MAKE) test_data
 
 # Executes a SQL query directly to verify that WordPress users still exist:
 test_data:
 	@echo "$(ORANGE)Check user data in MariaDB...$(RESET)"
-	@docker exec -it mariadb mysql -u $(DB_USER) -p$(DB_ROOT_PASS) -e \
-	"USE wordpress; SELECT * FROM wp_users;"
-	@echo "$(GREEN)Data check complete at: $$(date)$(RESET)"
+	@docker exec mariadb mysql -u root -p$(DB_ROOT_PASS) -e \
+	"USE wordpress; SELECT ID, user_login, user_email FROM wp_users;" \
+	| sed 's/\t/    /g'
+	@echo "$(GREEN)Data check complete ✔$(RESET)"
 
 # Opens a shell inside each container for debugging or manual management:
 inspect_container:

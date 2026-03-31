@@ -10,3 +10,8 @@ run all:
 clean docker volumes:
 docker compose -f srcs/docker-compose.yml down
 docker volume prune -f
+
+
+Test MariaDB
+Add a new user manually
+make exec_mariadb

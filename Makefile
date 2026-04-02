@@ -6,7 +6,7 @@
 #    By: amdemuyn <amdemuyn@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/09 18:19:56 by amdemuyn          #+#    #+#              #
-#    Updated: 2026/03/31 20:17:11 by amdemuyn         ###   ########.fr        #
+#    Updated: 2026/04/02 19:59:10 by amdemuyn         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -90,7 +90,11 @@ fclean: down
 	fi
 	@echo "$(RED)Cleaning directories...$(RESET)"
 	@docker system prune -a --force
+# For LINUX:
 	@sudo rm -rf /home/${USER}/data/mariadb /home/${USER}/data/wordpress
+# For MAC:
+	@rm -rf /Users/amandine/data/mariadb
+	@rm -rf /Users/amandine/data/wordpress
 	
 # Cleans everything & starts containers
 re: fclean all
@@ -116,8 +120,7 @@ exec_mariadb:
 test_persistence: down
 	@docker system prune -a --force
 	@$(MAKE) up
-	@echo "$(ORANGE)Waiting until MariaDB has restarted...$(RESET)"
-	@echo "$(ORANGE)Waiting for MariaDB to be READY...$(RESET)"
+	@echo "$(ORANGE)Waiting for MariaDB to have restarted and be READY...$(RESET)"
 	@until docker exec mariadb mysqladmin ping -u root -p$(DB_ROOT_PASS) --silent; do \
 		sleep 2; \
 	done
@@ -146,20 +149,20 @@ remember:
 	@echo ""
 	@echo "Usage: 'make <target>' list of <target>:"
 	@echo ""
-	@echo "$(BLUE)all$(RESET)              			Verify /etc/hosts and start containers"
-	@echo "$(BLUE)period_env$(RESET)     			Create .env file from .env.example"
-	@echo "$(BLUE)hosts$(RESET)           			Check /etc/hosts and add amdemuyn.42.fr if not present"
-	@echo "$(BLUE)up$(RESET)              			Create directories and start services in the background"
-	@echo "$(BLUE)down$(RESET)         	 			Stop and remove containers and networks but keep images and volumes"
-	@echo "$(BLUE)fclean$(RESET)           			Remove containers, images, volumes, and remove directories"
-	@echo "$(BLUE)re$(RESET)               			Remove containers, images, volumes, and clean directories, then start containers"
-	@echo "$(BLUE)ps$(RESET)               			List running containers and their status"
-	@echo "$(BLUE)exec_mariadb$(RESET)      		Access MariaDB database"
-	@echo "$(YELLOW)test_persistence$(RESET)  		Demonstrate data persistence"
-	@echo "$(YELLOW)test_data$(RESET)       		Check if data persists in MariaDB"
-	@echo "$(BLUE)inspect_container$(RESET)  		Access mariadb/wordpress/nginx containers"
-	@echo "$(BLUE)logs$(RESET)             			Display logs"
-	@echo "$(ORANGE)remember$(RESET)             	Display remember"
+	@echo "$(BLUE)all$(RESET)				Verify /etc/hosts and start containers"
+	@echo "$(BLUE)period_env$(RESET)			Create .env file from .env.example"
+	@echo "$(BLUE)hosts$(RESET)				Check /etc/hosts and add amdemuyn.42.fr if not present"
+	@echo "$(BLUE)up$(RESET)				Create directories and start services in the background"
+	@echo "$(BLUE)down$(RESET)				Stop and remove containers & networks but keep images and volumes"
+	@echo "$(BLUE)fclean$(RESET)				Remove containers, images, volumes, and remove directories"
+	@echo "$(BLUE)re$(RESET)				fclean, then start containers"
+	@echo "$(BLUE)ps$(RESET)				List running containers and their status"
+	@echo "$(BLUE)exec_mariadb$(RESET)			Access MariaDB database"
+	@echo "$(YELLOW)test_persistence$(RESET)		Demonstrate data persistence"
+	@echo "$(YELLOW)test_data$(RESET)			Check if data persists in MariaDB"
+	@echo "$(BLUE)inspect_container$(RESET)		Access mariadb/wordpress/nginx containers"
+	@echo "$(BLUE)logs$(RESET)				Display logs"
+	@echo "$(ORANGE)remember$(RESET)			Display remember"
 	@echo ""
 
 .PHONY: all period_env hosts up down fclean re ps exec_mariadb test_persistence test_data inspect_container logs remember 

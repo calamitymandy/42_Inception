@@ -47,36 +47,22 @@ Use the administrator credentials defined during setup.
 
 Credentials are not stored in the repository.
 
-They are managed using:
-
-A .env file for non-sensitive variables
-
-###  Docker secrets for passwords
-
-Location of secrets:
-
-secrets/
-├── db_password.txt
-├── db_root_password.txt
-└── credentials.txt
+They are managed using a .env file 
 
 
-Only authorized users should have access to this directory.
 
-Checking Service Status
-
-To verify running containers:
+### To verify running containers:
 
 docker ps
 
 
-To inspect logs for a specific service:
+### To inspect logs for a specific service:
 
 docker logs nginx
 docker logs wordpress
 docker logs mariadb
 
-Persistent Data
+### Persistent Data
 
 All persistent data is stored on the host machine:
 

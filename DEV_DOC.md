@@ -37,18 +37,10 @@ DOMAIN_NAME=login.42.fr
 MYSQL_USER=wp_user
 MYSQL_DATABASE=wordpress
 
-### 3. Secrets Configuration
 
-Create the following files in the secrets/ directory:
+This files must not be committed to Git.
 
-db_root_password.txt
-db_password.txt
-credentials.txt
-
-
-These files must not be committed to Git.
-
-Build and Launch
+### 3. Build and Launch
 
 To build images and start containers:
 

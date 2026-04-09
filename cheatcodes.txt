@@ -16,6 +16,190 @@ docker logs nginx
 docker logs MariaDB
 docker logs wordpress
 
-Test MariaDB
-Add a new user manually
-make exec_mariadb
+
+
+1 - docker-compose.yml check:
+
+❌ MUST NOT have:
+network: host
+links:
+--link
+
+✅ MUST have:
+networks:
+
+“Why not host network?”:
+
+“Host networking removes isolation between containers, which breaks Docker’s security model. 
+Using a custom Docker network ensures controlled communication between services.”
+
+---------------------------------------
+
+2 - Anti-cheat checks:
+
+❌ Forbidden:
+tail -f
+sleep infinity
+while true
+bash used as main process
+
+“Why is tail -f forbidden?”:
+
+“Because containers must run a real foreground process as PID 1. 
+Using tail -f is a hack and breaks proper container lifecycle management.”
+
+---------------------------------------
+
+3 - Run the project
+
+make
+
+✅ Expected:
+builds images
+starts containers
+no crash
+
+“What does your Makefile do?”:
+
+“It builds all Docker images and runs the infrastructure using docker-compose. 
+It ensures a reproducible setup with a single command.”
+
+---------------------------------------
+
+4 - PROJECT OVERVIEW QUESTIONS
+
+You WILL be asked this.
+
+❓ How Docker works:
+
+“Docker uses containerization to run applications in isolated environments sharing the host kernel. 
+Each container includes everything needed to run a service.”
+
+❓ Docker vs docker-compose:
+
+“Docker runs individual containers, while Docker Compose allows defining and orchestrating multiple services, 
+networks, and volumes in a single YAML file.”
+
+❓ Docker vs VM:
+
+“Virtual machines emulate full operating systems and are heavier. 
+Docker containers share the host kernel, making them faster and more lightweight.”
+
+❓ Why this structure:
+
+“The structure separates concerns:
+
+srcs/ contains all configuration
+requirements/ isolates each service
+each service has its own Dockerfile
+This improves maintainability and clarity.”
+
+---------------------------------------
+
+5 - NGINX + HTTPS test:
+
+
+Check port 443/TLS:
+
+HTTP (port 80)	❌ FAIL
+curl http://amdemuyn.42.fr or open http://amdemuyn.42.fr
+
+HTTPS (443)	✅ WORK
+curl -k https://amdemuyn.42.fr or https://amdemuyn.42.fr
+
+Check port 443 is open
+curl -I https://amdemuyn.42.fr
+
+TLS used	✅ YES
+Verify the TLS handshake and confirm that the server is using SSL/TLS correctly:
+openssl s_client -connect amdemuyn.42.fr:443
+
+
+❓ Why only port 443:
+
+“NGINX is the only entrypoint and must enforce secure HTTPS connections using TLS 1.2 or 1.3.”
+
+❓ TLS version:
+
+“Only TLSv1.2 and TLSv1.3 are allowed for security reasons. Older versions are deprecated.”
+
+❓ Where is TLS configured:
+
+“Inside the NGINX configuration file, where SSL certificates and protocols are defined.”
+
+---------------------------------------
+
+6 - Docker basics check
+
+one Dockerfile per service
+NOT using prebuilt images (except base image)
+
+“Did you use DockerHub images?”:
+
+“I only used Alpine/Debian as base images and built everything manually.”
+
+---------------------------------------
+
+7 - Docker Network:
+
+docker network ls
+
+“Docker networks allow containers to communicate using service names as hostnames while remaining isolated from the host and external access.”
+
+---------------------------------------
+
+8 - WordPress tests
+
+logs in
+edits page or adds comment
+
+Persistence wordpress:
+make
+make down
+make
+
+❓ Why no nginx here:
+
+“WordPress runs with PHP-FPM only. 
+NGINX is separated to follow single-responsibility and container best practices.”
+
+❓ Admin username rule:
+
+“It must not contain ‘admin’ for security reasons, to avoid common brute-force attacks.”
+
+---------------------------------------
+
+9 - MariaDB
+👨‍🏫 Evaluator:
+docker exec -it mariadb mysql -u amdemuyn -p OR make exec_mariadb
+
+❓ How do you connect:
+
+“Using the mysql client inside the container with credentials provided via environment variables.”
+
+❓ Why separate DB:
+
+“Separation improves scalability, security, and follows microservice architecture principles.”
+
+---------------------------------------
+
+10 - Volumes
+
+docker volume inspect srcs_mariadb
+docker volume inspect srcs_wordpress
+
+❓ Why volumes::
+
+“Volumes persist data outside containers, so data is not lost when containers are recreated.”
+
+---------------------------------------
+
+11 - PERSISTENCE TEST (CRITICAL)
+
+reboot VM
+run again
+check WordPress changes
+
+❓ Why does data persist:
+
+“Because data is stored in Docker volumes mapped to the host filesystem, not inside containers.”

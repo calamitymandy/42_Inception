@@ -90,6 +90,8 @@ Docker secrets are used for passwords and credentials.
 
 This separation prevents sensitive data from being exposed in images or repositories.
 
+But if we indicate .env in .gitignore, there is no issue with data being exposed.
+
 
 ### **Docker Network vs Host Network**
 

@@ -47,3 +47,21 @@ services:                                 # Define the services that will be run
 volumes:                                  # Define named volumes for persistent data storage
   mariadb:
   wordpress:
+
+##FOR LINUX
+#volumes:
+#  mariadb:
+#    name: mariadb
+#    driver: local
+#    driver_opts:
+#      type: none
+#      o: bind
+#      device: /home/login/data/mariadb
+
+#  wordpress:
+#    name: wordpress
+#    driver: local
+#    driver_opts:
+#      type: none
+#      o: bind
+#      device: /home/login/data/wordpress

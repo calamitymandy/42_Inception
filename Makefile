@@ -6,7 +6,7 @@
 #    By: amdemuyn <amdemuyn@student.42madrid.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/09 18:19:56 by amdemuyn          #+#    #+#              #
-#    Updated: 2026/04/02 19:59:10 by amdemuyn         ###   ########.fr        #
+#    Updated: 2026/04/10 20:33:48 by amdemuyn         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -90,9 +90,9 @@ fclean: down
 	fi
 	@echo "$(RED)Cleaning directories...$(RESET)"
 	@docker system prune -a --force
-# For LINUX:
+# FOR LINUX:
 	@sudo rm -rf /home/${USER}/data/mariadb /home/${USER}/data/wordpress
-# For MAC:
+# FOR MAC:
 	@rm -rf /Users/amandine/data/mariadb
 	@rm -rf /Users/amandine/data/wordpress
 	
@@ -111,7 +111,8 @@ exec_mariadb:
 	@echo "To show content of a table: $(YELLOW)<use database_name; select * from table_name;>$(RESET)"
 	@echo "To see the structure of a table: $(YELLOW)<use database_name; describe table_name;>$(RESET)"
 	@echo "$(RED)To exit: <exit;>$(RESET)"
-	@docker exec -it mariadb mysql -u $(DB_USER) -p $(DB_ROOT)
+	@echo "$(RED)$$DB_USER$(RESET)"
+	@docker exec -it mariadb mysql -u $$DB_USER -p
 
 # Simulates a full restart to check if database data persists:
 # Checks if the mariadb container exists.
@@ -160,7 +161,7 @@ remember:
 	@echo "$(BLUE)exec_mariadb$(RESET)			Access MariaDB database"
 	@echo "$(YELLOW)test_persistence$(RESET)		Demonstrate data persistence"
 	@echo "$(YELLOW)test_data$(RESET)			Check if data persists in MariaDB"
-	@echo "$(BLUE)inspect_container$(RESET)		Access mariadb/wordpress/nginx containers"
+	@echo "$(BLUE)inspect_container$(RESET)		Access mariadb/wordpress/nginx containers. Try <mysql -u amdemuyn -p> for mariadb or cat /etc/nginx/nginx.conf for nginx or ls /var/www/html for wordpress"
 	@echo "$(BLUE)logs$(RESET)				Display logs"
 	@echo "$(ORANGE)remember$(RESET)			Display remember"
 	@echo ""

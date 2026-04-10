@@ -16,6 +16,10 @@ docker logs nginx
 docker logs MariaDB
 docker logs wordpress
 
+login wordpress:
+https://amdemuyn.42.fr/wp-admin/
+amdemuyn-boss@42.fr
+
 
 
 1 - docker-compose.yml check:
@@ -153,10 +157,6 @@ docker network ls
 logs in
 edits page or adds comment
 
-Persistence wordpress:
-make
-make down
-make
 
 ❓ Why no nginx here:
 
@@ -196,9 +196,24 @@ docker volume inspect srcs_wordpress
 
 11 - PERSISTENCE TEST (CRITICAL)
 
+Persistence wordpress:
+
+make down
+make
+
+OR
+
 reboot VM
 run again
 check WordPress changes
+
+check if VOLUMES still persist: docker volume ls
+
+This should:
+
+stop containers
+remove containers
+NOT remove volumes
 
 ❓ Why does data persist:
 

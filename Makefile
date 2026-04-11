@@ -60,13 +60,16 @@ hosts:
 # & Launches containers with Docker Compose:
 # --build → rebuilds images.
 # -d → runs in detached mode (background).
+# FOR MAC
+# 	@mkdir -p /Users/amandine/data/mariadb
+#	@mkdir -p /Users/amandine/data/wordpress
 # ### FOR LINUX ###
 # 	@mkdir -p /home/${USER}/data/mariadb
 #	@mkdir -p /home/${USER}/data/wordpress
 up:
 	@echo "$(GREEN) Create directories and launch containers: $(RESET)"
-	@mkdir -p /Users/amandine/data/mariadb
-	@mkdir -p /Users/amandine/data/wordpress
+	@mkdir -p /home/${USER}/data/mariadb
+	@mkdir -p /home/${USER}/data/wordpress
 	@docker compose -f $(DOCKER_CMP) up --build -d
 
 # Stops containers and removes Docker networks.
@@ -93,8 +96,8 @@ fclean: down
 # FOR LINUX:
 	@sudo rm -rf /home/${USER}/data/mariadb /home/${USER}/data/wordpress
 # FOR MAC:
-	@rm -rf /Users/amandine/data/mariadb
-	@rm -rf /Users/amandine/data/wordpress
+#	@rm -rf /Users/amandine/data/mariadb
+#	@rm -rf /Users/amandine/data/wordpress
 	
 # Cleans everything & starts containers
 re: fclean all
